@@ -1,0 +1,35 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no,minimal-ui,viewport-fit=cover">
+    <meta name=apple-mobile-web-app-capable content=yes>
+    <meta name=apple-mobile-web-app-status-bar-style content=black>
+    <title>BarRaider's Delayed Text Input</title>
+    <link rel="stylesheet" href="../sdpi.css">
+</head>
+<body>
+    <div class="sdpi-wrapper">
+        <div type="textarea" class="sdpi-item" id="inputText_div">
+            <div class="sdpi-item-label">Text</div>
+            <span class="sdpi-item-value textarea">
+                <textarea type="textarea" oninput="updateSettings()" id="inputText"></textarea>
+            </span>
+        </div>
+        <div type="range" class="sdpi-item" id="delay_div">
+            <div class="sdpi-item-label">Delay (ms)</div>
+            <div class="sdpi-item-value">
+                <input type="range" min="1" max="2000" value="1" oninput="updateSettings()" id="delay">
+            </div>
+        </div>
+        <div type="range" class="sdpi-item">
+            <details class="message">
+                <summary><label for="delay" id="delay_label"></label></summary>
+            </details>
+        </div>
+    </div>
+
+
+        <script src="../Index.js"></script>
+</body>
+</html>

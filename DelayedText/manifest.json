@@ -1,0 +1,34 @@
+{
+  "Actions": [
+    {
+      "Icon": "Images/icon",
+      "Name": "Delayed Text Input",
+      "States": [
+        {
+          "Image": "Images/bg",
+          "TitleAlignment": "bottom",
+          "FontSize": "16"
+        }
+      ],
+      "SupportedInMultiActions": true,
+      "Tooltip": "Delayed text plugin for Stream Deck",
+      "UUID": "com.barraider.delayedtext",
+      "PropertyInspectorPath": "PropertyInspector/DelayedText/Index.html"
+    }
+  ],
+  "Author": "BarRaider",
+  "Description": "Delayed text implementation for Stream Deck",
+  "Name": "Delayed Text Input",
+  "Icon": "Images/pluginIcon",
+  "URL": "https://github.com/BarRaider/streamdeck-delayedtext",
+  "Version": "0.5",
+  "CodePath": "delayedtext.exe",
+  "Category": "BarRaider",
+  "CategoryIcon": "Images/categoryIcon",
+  "OS": [
+    {
+      "Platform": "windows",
+      "MinimumVersion": "10"
+    }
+  ]
+}
