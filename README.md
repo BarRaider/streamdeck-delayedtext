@@ -12,7 +12,8 @@ This library uses the [streamdeck-client-csharp](https://github.com/TyrenDe/stre
 Always open to more suggestions.
 
 ## How do I get started using it?
-Install by clicking the com.barraider.delayedtext.streamDeckPlugin file in the Releases folder.
+Install by clicking the com.barraider.delayedtext.streamDeckPlugin file in the Releases folder:
+https://github.com/BarRaider/streamdeck-delayedtext/releases
 
 ## I found a bug, who do I contact?
 Just head over to the issues page and create a new issue.
