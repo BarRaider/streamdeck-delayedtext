@@ -11,18 +11,18 @@
         }
       ],
       "SupportedInMultiActions": true,
-      "Tooltip": "Delayed text plugin for Stream Deck",
+      "Tooltip": "The delayed text input simulates a keyboard but also allows you to choose the delay between each key press (between 1ms to 2000ms). Great for macros in games that expect a little longer delay between every key press.",
       "UUID": "com.barraider.delayedtext",
       "PropertyInspectorPath": "PropertyInspector/DelayedText/Index.html"
     }
   ],
   "Author": "BarRaider",
-  "Description": "Delayed text implementation for Stream Deck",
+  "Description": "The delayed text input simulates a keyboard but also allows you to choose the delay between each key press (between 1ms to 2000ms). Great for macros in games that expect a little longer delay between every key press.",
   "Name": "Delayed Text Input",
   "Icon": "Images/pluginIcon",
-  "URL": "https://github.com/BarRaider/streamdeck-delayedtext",
-  "Version": "0.5",
-  "CodePath": "delayedtext.exe",
+  "URL": "https://barraider.github.io/",
+  "Version": "1.0",
+  "CodePath": "com.barraider.delayedtext",
   "Category": "BarRaider",
   "CategoryIcon": "Images/categoryIcon",
   "OS": [

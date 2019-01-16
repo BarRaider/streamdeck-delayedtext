@@ -10,11 +10,21 @@
 </head>
 <body>
     <div class="sdpi-wrapper">
+        <details class="message info">
+            <summary>For feedback/suggestions contact me at <a href="https://BarRaider.github.io" target="_blank">https://BarRaider.github.io</a> </summary>
+        </details>
         <div type="textarea" class="sdpi-item" id="inputText_div">
             <div class="sdpi-item-label">Text</div>
             <span class="sdpi-item-value textarea">
                 <textarea type="textarea" oninput="updateSettings()" id="inputText"></textarea>
             </span>
+        </div>
+        <div type="checkbox" class="sdpi-item" id="RealEnter">
+            <div class="sdpi-item-label">Enter key</div>
+            <div class="sdpi-item-value">
+                <input id="enterMode" type="checkbox" value="" oninput="updateSettings()">
+                <label for="enterMode" class="sdpi-item-label"><span></span>Secondary behaviour for ENTER key</label>
+            </div>
         </div>
         <div type="range" class="sdpi-item" id="delay_div">
             <div class="sdpi-item-label">Delay (ms)</div>

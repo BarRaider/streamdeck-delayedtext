@@ -19,6 +19,7 @@ namespace Delayedtext
                 InspectorSettings instance = new InspectorSettings();
                 instance.InputText = String.Empty; ;
                 instance.Delay = 1;
+                instance.EnterMode = false;
 
                 return instance;
             }
@@ -44,6 +45,9 @@ namespace Delayedtext
 
             [JsonProperty(PropertyName = "delay")]
             public int Delay { get; set; }
+
+            [JsonProperty(PropertyName = "enterMode")]
+            public bool EnterMode { get; set; }
 
             [JsonIgnore]
             public string ActionId { private get; set; }
@@ -101,9 +105,21 @@ namespace Delayedtext
                 string text = settings.InputText;
                 int delay   = settings.Delay;
 
+                if (settings.EnterMode)
+                {
+                    text = text.Replace("\r\n", "\n");
+                }
+
                 for (int idx = 0; idx < text.Length; idx++)
                 {
-                    iis.Keyboard.TextEntry(text[idx]);
+                    if (settings.EnterMode && text[idx] == '\n')
+                    {
+                        iis.Keyboard.KeyPress(WindowsInput.Native.VirtualKeyCode.RETURN);
+                    }
+                    else
+                    {
+                        iis.Keyboard.TextEntry(text[idx]);
+                    }
                     Thread.Sleep(delay);
                 }
             });
@@ -131,6 +147,7 @@ namespace Delayedtext
                     case "updatesettings":
                         settings.Delay = (int)payload["delay"];
                         settings.InputText = (string)payload["inputText"];
+                        settings.EnterMode = (bool)payload["enterMode"];
                         settings.SetSettingsAsync();
                         break;
                 }

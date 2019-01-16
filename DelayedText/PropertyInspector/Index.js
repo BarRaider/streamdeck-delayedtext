@@ -35,6 +35,9 @@ function connectSocket(inPort, inUUID, inRegisterEvent, inInfo, inActionInfo) {
             var inputText = document.getElementById('inputText');
             inputText.value = payload['inputText'];
 
+            var enterMode = document.getElementById('enterMode');
+            enterMode.checked = payload['enterMode'];
+
             var delay = document.getElementById('delay');
             delay.value = payload['delay'];
             updateDelayLabel();
@@ -45,12 +48,14 @@ function connectSocket(inPort, inUUID, inRegisterEvent, inInfo, inActionInfo) {
 function updateSettings() {
     var inputText = document.getElementById('inputText');
     var delay = document.getElementById('delay');
+    var enterMode = document.getElementById('enterMode');
     var payload = {};
 
     updateDelayLabel();
     payload.property_inspector = 'updateSettings';
     payload.inputText = inputText.value;
     payload.delay = delay.value;
+    payload.enterMode = enterMode.checked;
     sendPayloadToPlugin(payload);
 }
 
@@ -58,7 +63,7 @@ function updateDelayLabel() {
     var delayLabel = document.getElementById('delay_label');
     var delay = document.getElementById('delay');
 
-    delayLabel.innerText = delay.value + " ms";  
+    delayLabel.innerText = delay.value + " ms (Use left/right keys for added precision)";  
 }
 
 function sendPayloadToPlugin(payload) {
