@@ -7,6 +7,7 @@ This library uses the [streamdeck-client-csharp](https://github.com/TyrenDe/stre
 ## Current functionality
 - Simulates keyboard input
 - You can choose the delay between each character (between 1ms to 2000ms)
+- **New in v1.01** Secondary behaviour for ENTER key (to support additional games)
 
 ## Feature roadmap
 Always open to more suggestions.

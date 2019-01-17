@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using BarRaider.SdTools;
+using Newtonsoft.Json;
 using streamdeck_client_csharp;
 using streamdeck_client_csharp.Events;
 using System;
@@ -18,7 +19,7 @@ namespace Delayedtext
         private SemaphoreSlim instancesLock = new SemaphoreSlim(1);
         
         // Holds all instances of plugin
-        private static Dictionary<string, DelayedTextInput> instances = new Dictionary<string, DelayedTextInput>();
+        private static Dictionary<string, IPluginable> instances = new Dictionary<string, IPluginable>();
 
 
         public void Run(StreamDeckOptions options)

@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using BarRaider.SdTools;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -10,9 +11,9 @@ using WindowsInput;
 
 namespace Delayedtext
 {
-    public class DelayedTextInput
+    public class DelayedTextInput : IPluginable
     {
-        private class InspectorSettings
+        private class InspectorSettings : SettingsBase
         {
             public static InspectorSettings CreateDefaultSettings()
             {
@@ -24,22 +25,6 @@ namespace Delayedtext
                 return instance;
             }
 
-            public async void SendToPropertyInspectorAsync()
-            {
-                if (StreamDeckConnection != null && !String.IsNullOrEmpty(ContextId) && !String.IsNullOrEmpty(ActionId))
-                {
-                    await StreamDeckConnection.SendToPropertyInspectorAsync(ActionId, JObject.FromObject(this), this.ContextId);
-                }
-            }
-
-            public async void SetSettingsAsync()
-            {
-                if (StreamDeckConnection != null && !String.IsNullOrEmpty(ContextId) && !String.IsNullOrEmpty(ActionId))
-                {
-                    await StreamDeckConnection.SetSettingsAsync(JObject.FromObject(this), this.ContextId);
-                }
-            }
-
             [JsonProperty(PropertyName = "inputText")]
             public string InputText { get; set; }
 
@@ -48,15 +33,6 @@ namespace Delayedtext
 
             [JsonProperty(PropertyName = "enterMode")]
             public bool EnterMode { get; set; }
-
-            [JsonIgnore]
-            public string ActionId { private get; set; }
-
-            [JsonIgnore]
-            public string ContextId { private get; set; }
-
-            [JsonIgnore]
-            public streamdeck_client_csharp.StreamDeckConnection StreamDeckConnection { private get; set; }
         }
 
         #region Private members
@@ -96,37 +72,11 @@ namespace Delayedtext
             SendInput();
         }
 
-        private async void SendInput()
+        public void KeyReleased()
         {
-            inputRunning = true;
-            await Task.Run(() =>
-            {
-                InputSimulator iis = new InputSimulator();
-                string text = settings.InputText;
-                int delay   = settings.Delay;
-
-                if (settings.EnterMode)
-                {
-                    text = text.Replace("\r\n", "\n");
-                }
-
-                for (int idx = 0; idx < text.Length; idx++)
-                {
-                    if (settings.EnterMode && text[idx] == '\n')
-                    {
-                        iis.Keyboard.KeyPress(WindowsInput.Native.VirtualKeyCode.RETURN);
-                    }
-                    else
-                    {
-                        iis.Keyboard.TextEntry(text[idx]);
-                    }
-                    Thread.Sleep(delay);
-                }
-            });
-            inputRunning = false;
         }
 
-        public void KeyReleased()
+        public void OnTick()
         {
         }
 
@@ -154,6 +104,39 @@ namespace Delayedtext
             }
         }
 
+        #endregion
+
+        #region Private Methods
+
+        private async void SendInput()
+        {
+            inputRunning = true;
+            await Task.Run(() =>
+            {
+                InputSimulator iis = new InputSimulator();
+                string text = settings.InputText;
+                int delay = settings.Delay;
+
+                if (settings.EnterMode)
+                {
+                    text = text.Replace("\r\n", "\n");
+                }
+
+                for (int idx = 0; idx < text.Length; idx++)
+                {
+                    if (settings.EnterMode && text[idx] == '\n')
+                    {
+                        iis.Keyboard.KeyPress(WindowsInput.Native.VirtualKeyCode.RETURN);
+                    }
+                    else
+                    {
+                        iis.Keyboard.TextEntry(text[idx]);
+                    }
+                    Thread.Sleep(delay);
+                }
+            });
+            inputRunning = false;
+        }
         #endregion
     }
 }
