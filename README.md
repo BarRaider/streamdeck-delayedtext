@@ -1,9 +1,6 @@
 # streamdeck-delayedtext
 A C# delayed text inputer for the Elgato Stream Deck device.
 
-## Dependencies
-This library uses the [streamdeck-client-csharp](https://github.com/TyrenDe/streamdeck-client-csharp) wrapper
-
 ## Current functionality
 - Simulates keyboard input
 - You can choose the delay between each character (between 1ms to 2000ms)
@@ -18,6 +15,9 @@ https://github.com/BarRaider/streamdeck-delayedtext/releases
 
 ## I found a bug, who do I contact?
 Just head over to the issues page and create a new issue.
+
+## Dependencies
+This library uses the [streamdeck-client-csharp](https://github.com/TyrenDe/streamdeck-client-csharp) wrapper
 
 ## License
 MIT License
