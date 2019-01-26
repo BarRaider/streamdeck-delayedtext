@@ -80,6 +80,10 @@ namespace Delayedtext
         {
         }
 
+        public void Dispose()
+        {
+        }
+
         public void UpdateSettings(JObject payload)
         {
             if (payload["property_inspector"] != null)
@@ -137,6 +141,7 @@ namespace Delayedtext
             });
             inputRunning = false;
         }
+
         #endregion
     }
 }
