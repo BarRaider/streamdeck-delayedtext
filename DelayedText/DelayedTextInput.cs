@@ -11,13 +11,13 @@ using WindowsInput;
 
 namespace Delayedtext
 {
-    public class DelayedTextInput : IPluginable
+    public class DelayedTextInput : PluginBase
     {
-        private class InspectorSettings : SettingsBase
+        private class PluginSettings
         {
-            public static InspectorSettings CreateDefaultSettings()
+            public static PluginSettings CreateDefaultSettings()
             {
-                InspectorSettings instance = new InspectorSettings();
+                PluginSettings instance = new PluginSettings();
                 instance.InputText = String.Empty; ;
                 instance.Delay = 1;
                 instance.EnterMode = false;
@@ -40,29 +40,25 @@ namespace Delayedtext
         private const int RESET_COUNTER_KEYPRESS_LENGTH = 1;
 
         private bool inputRunning = false;
-        private InspectorSettings settings;
+        private PluginSettings settings;
 
         #endregion
 
         #region Public Methods
 
-        public DelayedTextInput(streamdeck_client_csharp.StreamDeckConnection connection, string action, string context, JObject settings)
+        public DelayedTextInput(SDConnection connection, JObject settings) : base(connection, settings)
         {
             if (settings == null || settings.Count == 0)
             {
-                this.settings = InspectorSettings.CreateDefaultSettings();
+                this.settings = PluginSettings.CreateDefaultSettings();
             }
             else
             {
-                this.settings = settings.ToObject<InspectorSettings>();
+                this.settings = settings.ToObject<PluginSettings>();
             }
-
-            this.settings.StreamDeckConnection = connection;
-            this.settings.ActionId = action;
-            this.settings.ContextId = context;
         }
 
-        public void KeyPressed()
+        public override void KeyPressed()
         {
             if (inputRunning)
             {
@@ -72,37 +68,37 @@ namespace Delayedtext
             SendInput();
         }
 
-        public void KeyReleased()
+        public override void KeyReleased()
         {
         }
 
-        public void OnTick()
+        public override void OnTick()
         {
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
         }
 
-        public void UpdateSettings(JObject payload)
+        public override void UpdateSettings(JObject payload)
         {
             if (payload["property_inspector"] != null)
             {
                 switch (payload["property_inspector"].ToString().ToLower())
                 {
                     case "propertyinspectorconnected":
-                        settings.SendToPropertyInspectorAsync();
+                        Connection.SendToPropertyInspectorAsync(JObject.FromObject(settings));
                         break;
 
                     case "propertyinspectorwilldisappear":
-                        settings.SetSettingsAsync();
+                        Connection.SetSettingsAsync(JObject.FromObject(settings));
                         break;
 
                     case "updatesettings":
                         settings.Delay = (int)payload["delay"];
                         settings.InputText = (string)payload["inputText"];
                         settings.EnterMode = (bool)payload["enterMode"];
-                        settings.SetSettingsAsync();
+                        Connection.SetSettingsAsync(JObject.FromObject(settings));
                         break;
                 }
             }
