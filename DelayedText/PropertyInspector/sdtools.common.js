@@ -1,90 +1,103 @@
 ﻿var websocket = null,
     uuid = null,
+    registerEventName = null,
     actionInfo = {},
     inInfo = {},
     runningApps = [],
     isQT = navigator.appVersion.includes('QtWebEngine');
 
-function connectSocket(inPort, inUUID, inRegisterEvent, inInfo, inActionInfo) {
+function connectElgatoStreamDeckSocket(inPort, inUUID, inRegisterEvent, inInfo, inActionInfo) {
     uuid = inUUID;
+    registerEventName = inRegisterEvent;
+    console.log(uuid, inActionInfo);
     actionInfo = JSON.parse(inActionInfo); // cache the info
     inInfo = JSON.parse(inInfo);
     websocket = new WebSocket('ws://localhost:' + inPort);
 
     addDynamicStyles(inInfo.colors);
 
-    websocket.onopen = function () {
-        var json = {
-            event: inRegisterEvent,
-            uuid: inUUID
-        };
+    websocket.onopen = websocketOnOpen;
+    websocket.onmessage = websocketOnMessage;
+    loadConfiguration(actionInfo.payload.settings);
+}
 
-        websocket.send(JSON.stringify(json));
-
-        // Notify the plugin that we are connected
-        sendValueToPlugin('propertyInspectorConnected', 'property_inspector');
+function websocketOnOpen() {
+    var json = {
+        event: registerEventName,
+        uuid: uuid
     };
+    websocket.send(JSON.stringify(json));
 
-    websocket.onmessage = function (evt) {
-        // Received message from Stream Deck
-        var jsonObj = JSON.parse(evt.data);
-
-        if (jsonObj.event === 'sendToPropertyInspector') {
-            var payload = jsonObj.payload;
-
-            var inputText = document.getElementById('inputText');
-            inputText.value = payload['inputText'];
-
-            var enterMode = document.getElementById('enterMode');
-            enterMode.checked = payload['enterMode'];
-
-            var delay = document.getElementById('delay');
-            delay.value = payload['delay'];
-            updateDelayLabel();
-        }
-    };
+    // Notify the plugin that we are connected
+    sendValueToPlugin('propertyInspectorConnected', 'property_inspector');
 }
 
-function updateSettings() {
-    var inputText = document.getElementById('inputText');
-    var delay = document.getElementById('delay');
-    var enterMode = document.getElementById('enterMode');
-    var payload = {};
+function websocketOnMessage(evt) {
+    // Received message from Stream Deck
+    var jsonObj = JSON.parse(evt.data);
 
-    updateDelayLabel();
-    payload.property_inspector = 'updateSettings';
-    payload.inputText = inputText.value;
-    payload.delay = delay.value;
-    payload.enterMode = enterMode.checked;
-    sendPayloadToPlugin(payload);
-}
-
-function updateDelayLabel() {
-    var delayLabel = document.getElementById('delay_label');
-    var delay = document.getElementById('delay');
-
-    delayLabel.innerText = delay.value + " ms (Use left/right keys for added precision)";  
-}
-
-function sendPayloadToPlugin(payload) {
-    if (websocket && (websocket.readyState === 1)) {
-        const json = {
-            'action': actionInfo['action'],
-            'event': 'sendToPlugin',
-            'context': uuid,
-            'payload': payload
-        };
-        websocket.send(JSON.stringify(json));
+    if (jsonObj.event === 'sendToPropertyInspector') {
+        var payload = jsonObj.payload;
+        loadConfiguration(payload);
+    }
+    else if (jsonObj.event === 'didReceiveSettings') {
+        var payload = jsonObj.payload;
+        loadConfiguration(payload.settings);
+    }
+    else {
+        console.log("Unhandled websocketOnMessage: " + jsonObj.event);
     }
 }
 
-function openWebsite() {
+function loadConfiguration(payload) {
+    console.log('loadConfiguration');
+    console.log(payload);
+    for (var key in payload) {
+        try {
+            var elem = document.getElementById(key);
+            if (elem.classList.contains("sdCheckbox")) { // Checkbox
+                elem.checked = payload[key];
+            }
+            else if (elem.classList.contains("sdFile")) { // File
+
+            }
+            else { // Normal value
+                elem.value = payload[key];
+            }
+            console.log("Load: " + key + "=" + payload[key]);
+        }
+        catch (err) {
+            console.log("loadConfiguration failed for key: " + key + " - " + err);
+        }
+    }
+}
+
+function setSettings() {
+    var payload = {};
+    var elements = document.getElementsByClassName("sdProperty");
+
+    Array.prototype.forEach.call(elements, function (elem) {
+        var key = elem.id;
+        if (elem.classList.contains("sdCheckbox")) { // Checkbox
+            payload[key] = elem.checked;
+        }
+        else if (elem.classList.contains("sdFile")) { // File
+
+        }
+        else { // Normal value
+            payload[key] = elem.value;
+        }
+        console.log("Save: " + key + "<=" + payload[key]);
+    });
+    setSettingsToPlugin(payload);
+}
+
+function setSettingsToPlugin(payload) {
     if (websocket && (websocket.readyState === 1)) {
         const json = {
-            'event': 'openUrl',
-            'payload': {
-                'url': 'https://BarRaider.github.io'
-            }
+            'event': 'setSettings',
+            'context': uuid,
+            'payload': payload
         };
         websocket.send(JSON.stringify(json));
     }
@@ -99,6 +112,18 @@ function sendValueToPlugin(value, param) {
             'context': uuid,
             'payload': {
                 [param]: value
+            }
+        };
+        websocket.send(JSON.stringify(json));
+    }
+}
+
+function openWebsite() {
+    if (websocket && (websocket.readyState === 1)) {
+        const json = {
+            'event': 'openUrl',
+            'payload': {
+                'url': 'https://BarRaider.github.io'
             }
         };
         websocket.send(JSON.stringify(json));

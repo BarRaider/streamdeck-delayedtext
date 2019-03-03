@@ -1,6 +1,9 @@
 # streamdeck-delayedtext
 A C# delayed text inputer for the Elgato Stream Deck device.
 
+## Dependencies
+This plugin uses the [StreamDeck-Tools](https://github.com/BarRaider/streamdeck-tools) v2.0
+
 ## Current functionality
 - Simulates keyboard input
 - You can choose the delay between each character (between 1ms to 2000ms)
@@ -14,10 +17,10 @@ Install by clicking the com.barraider.delayedtext.streamDeckPlugin file in the R
 https://github.com/BarRaider/streamdeck-delayedtext/releases
 
 ## I found a bug, who do I contact?
-Just head over to the issues page and create a new issue.
+For support please contact the developer. Contact information is available at https://barraider.github.io
 
-## Dependencies
-This library uses the [streamdeck-client-csharp](https://github.com/TyrenDe/streamdeck-client-csharp) wrapper
+## I have a feature request, who do I contact?
+Please contact the developer. Contact information is available at https://barraider.github.io
 
 ## License
 MIT License

@@ -11,6 +11,7 @@ using WindowsInput;
 
 namespace Delayedtext
 {
+    [PluginActionId("com.barraider.delayedtext")]
     public class DelayedTextInput : PluginBase
     {
         private class PluginSettings
@@ -46,20 +47,22 @@ namespace Delayedtext
 
         #region Public Methods
 
-        public DelayedTextInput(SDConnection connection, JObject settings) : base(connection, settings)
+        public DelayedTextInput(SDConnection connection, InitialPayload payload) : base(connection, payload)
         {
-            if (settings == null || settings.Count == 0)
+            if (payload.Settings == null || payload.Settings.Count == 0)
             {
                 this.settings = PluginSettings.CreateDefaultSettings();
+                Connection.SetSettingsAsync(JObject.FromObject(settings));
             }
             else
             {
-                this.settings = settings.ToObject<PluginSettings>();
+                this.settings = payload.Settings.ToObject<PluginSettings>();
             }
         }
 
-        public override void KeyPressed()
+        public override void KeyPressed(KeyPayload payload)
         {
+            Logger.Instance.LogMessage(TracingLevel.INFO, "Key Pressed");
             if (inputRunning)
             {
                 return;
@@ -68,7 +71,7 @@ namespace Delayedtext
             SendInput();
         }
 
-        public override void KeyReleased()
+        public override void KeyReleased(KeyPayload payload)
         {
         }
 
@@ -78,31 +81,19 @@ namespace Delayedtext
 
         public override void Dispose()
         {
+            Logger.Instance.LogMessage(TracingLevel.INFO, "Destructor called");
         }
 
-        public override void UpdateSettings(JObject payload)
+        public override void ReceivedSettings(ReceivedSettingsPayload payload)
         {
-            if (payload["property_inspector"] != null)
-            {
-                switch (payload["property_inspector"].ToString().ToLower())
-                {
-                    case "propertyinspectorconnected":
-                        Connection.SendToPropertyInspectorAsync(JObject.FromObject(settings));
-                        break;
-
-                    case "propertyinspectorwilldisappear":
-                        Connection.SetSettingsAsync(JObject.FromObject(settings));
-                        break;
-
-                    case "updatesettings":
-                        settings.Delay = (int)payload["delay"];
-                        settings.InputText = (string)payload["inputText"];
-                        settings.EnterMode = (bool)payload["enterMode"];
-                        Connection.SetSettingsAsync(JObject.FromObject(settings));
-                        break;
-                }
-            }
+            // New in StreamDeck-Tools v2.0:
+            Tools.AutoPopulateSettings(settings, payload.Settings);
+            Logger.Instance.LogMessage(TracingLevel.INFO, $"Settings loaded: {payload.Settings}");
         }
+
+        public override void ReceivedGlobalSettings(ReceivedGlobalSettingsPayload payload)
+        { }
+
 
         #endregion
 
@@ -137,7 +128,6 @@ namespace Delayedtext
             });
             inputRunning = false;
         }
-
         #endregion
     }
 }

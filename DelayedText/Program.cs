@@ -12,9 +12,7 @@ namespace Delayedtext
             // Uncomment this line of code to allow for debugging
             //while (!System.Diagnostics.Debugger.IsAttached) { System.Threading.Thread.Sleep(100); }
 
-            List<PluginActionId> supportedActionIds = new List<PluginActionId>();
-            supportedActionIds.Add(new PluginActionId("com.barraider.delayedtext", typeof(DelayedTextInput)));
-            SDWrapper.Run(args, supportedActionIds.ToArray());
+            SDWrapper.Run(args);
         }
     }
 }

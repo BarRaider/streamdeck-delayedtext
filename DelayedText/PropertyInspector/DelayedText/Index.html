@@ -11,25 +11,25 @@
 <body>
     <div class="sdpi-wrapper">
         <details class="message info">
-            <summary>For feedback/suggestions contact me at <a href="https://BarRaider.github.io" target="_blank" onclick="openWebsite()">https://BarRaider.github.io</a> </summary>
+            <summary>For feedback/suggestions contact me at <span class="linkspan" onclick="openWebsite()">https://BarRaider.github.io</span> </summary>
         </details>
         <div type="textarea" class="sdpi-item" id="inputText_div">
             <div class="sdpi-item-label">Text</div>
             <span class="sdpi-item-value textarea">
-                <textarea type="textarea" oninput="updateSettings()" id="inputText"></textarea>
+                <textarea type="textarea" oninput="setSettings()" class="sdProperty" id="inputText"></textarea>
             </span>
         </div>
         <div type="checkbox" class="sdpi-item" id="RealEnter">
             <div class="sdpi-item-label">Enter key</div>
             <div class="sdpi-item-value">
-                <input id="enterMode" type="checkbox" value="" oninput="updateSettings()">
+                <input id="enterMode" type="checkbox" value="" class="sdProperty sdCheckbox" oninput="setSettings()">
                 <label for="enterMode" class="sdpi-item-label"><span></span>Secondary behaviour for ENTER key</label>
             </div>
         </div>
         <div type="range" class="sdpi-item" id="delay_div">
             <div class="sdpi-item-label">Delay (ms)</div>
             <div class="sdpi-item-value">
-                <input type="range" min="1" max="2000" value="1" oninput="updateSettings()" id="delay">
+                <input type="range" min="1" max="2000" value="1" class="sdProperty" oninput="setSettings()" id="delay">
             </div>
         </div>
         <div type="range" class="sdpi-item">
@@ -40,6 +40,6 @@
     </div>
 
 
-        <script src="../Index.js"></script>
+        <script src="../sdtools.common.js"></script>
 </body>
 </html>
